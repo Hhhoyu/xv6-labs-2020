@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "sysinfo.h"
 
 struct cpu cpus[NCPU];
 
@@ -253,6 +254,7 @@ growproc(int n)
   return 0;
 }
 
+
 // Create a new process, copying the parent.
 // Sets up child kernel stack to return as if from fork() system call.
 int
@@ -274,6 +276,8 @@ fork(void)
     return -1;
   }
   np->sz = p->sz;
+
+  safestrcpy(np->mask,p->mask,sizeof(p->mask));//syscall加入
 
   np->parent = p;
 
@@ -692,4 +696,14 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+int proc_num(void){
+  struct proc* p;
+  uint64 num=0;
+  for(p=proc;p<&proc[NPROC];p++){
+    if(p->state != UNUSED)
+      num++;
+  }
+  return num;
 }
