@@ -1442,7 +1442,7 @@ linkunlink(char *s)
 void
 bigdir(char *s)
 {
-  enum { N = 500 };
+  enum { N = 100 };
   int i, fd;
   char name[10];
 
